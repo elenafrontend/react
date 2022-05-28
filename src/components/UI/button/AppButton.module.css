@@ -1,0 +1,8 @@
+.appBtn {
+    border: 2px solid salmon;
+    border-radius: 6px;
+    padding: 5px 15px;
+    font-size: 14px;
+    background-color: transparent;
+    cursor: pointer;
+}
