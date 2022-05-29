@@ -45,11 +45,11 @@ function App() {
         filter={filter}
         setFilter={setFilter}
       />
-
-      { searchedAndSortedPosts.length === 0
-         ? <h2 style={{textAlign: 'center'}}>Посты не найдены</h2>
-         : <PostList remove={deletePost} posts={searchedAndSortedPosts} title={'Посты про JS'}/>
-      }
+      <PostList
+        remove={deletePost}
+        posts={searchedAndSortedPosts}
+        title={'Посты про JS'}
+      />
     </div>
   );
 }
