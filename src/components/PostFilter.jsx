@@ -13,7 +13,6 @@ const PostFilter = ({filter, setFilter}) => {
         placeholder='Поиск ...'
       />
 
-      <hr style={{margin: '15px 0'}}/>
       <AppSelect
         value={filter.sort}
         onChange={option => setFilter({...filter, sort: option})}
