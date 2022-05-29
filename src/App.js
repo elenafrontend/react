@@ -3,6 +3,7 @@ import "./styles/App.css"
 import PostForm from "./components/PostForm";
 import PostList from "./components/PostList";
 import AppSelect from "./components/UI/select/AppSelect";
+import AppInput from "./components/UI/input/AppInput";
 
 function App() {
   const [posts, setPosts] = useState([
@@ -10,7 +11,20 @@ function App() {
     {id: 2, title: "тт", body: "аа"},
     {id: 3, title: "дд", body: "кк"}
   ]);
+  const  [searchQuery, setSearchQuery] = useState('')
   const [selectedSort, setSelectedSort] = useState('')
+
+  const getSortedPosts = () => {
+    console.log("Отработала getSortedPosts")
+    if(selectedSort) {
+      return [...posts].sort(
+        (a, b) => a[selectedSort].localeCompare(b[selectedSort])
+      );
+    }
+    return posts;
+  };
+
+  const sortedPosts = getSortedPosts();
 
   const createPost = (newPost) => {
     setPosts([...posts, newPost]);
@@ -22,12 +36,17 @@ function App() {
 
   const sortPosts = (sortOption) => {
     setSelectedSort(sortOption);
-    setPosts([...posts].sort((a, b) => a[sortOption].localeCompare(b[sortOption])))
   }
 
   return (
     <div className="App">
       <PostForm create={createPost}/>
+
+      <AppInput
+        value={searchQuery}
+        onChange={event => setSearchQuery(event.target.value)}
+        placeholder='Поиск ...'
+      />
 
       <hr style={{margin: '15px 0'}}/>
       <AppSelect
@@ -42,7 +61,7 @@ function App() {
 
       { posts.length === 0
          ? <h2 style={{textAlign: 'center'}}>Посты не найдены</h2>
-         : <PostList remove={deletePost} posts={posts} title={'Посты про JS'}/>
+         : <PostList remove={deletePost} posts={sortedPosts} title={'Посты про JS'}/>
       }
     </div>
   );
