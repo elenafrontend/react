@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from "axios";
 import "./styles/App.css"
 import PostForm from "./components/PostForm";
@@ -9,17 +9,17 @@ import AppButton from "./components/UI/button/AppButton";
 import {usePosts} from "./hooks/usePosts";
 
 function App() {
-  const [posts, setPosts] = useState([
-    {id: 1, title: "аа", body: "уу"},
-    {id: 2, title: "тт", body: "аа"},
-    {id: 3, title: "дд", body: "кк"}
-  ]);
+  const [posts, setPosts] = useState([]);
   const [filter, setFilter] = useState({sort: '', query: ''})
   const [modal, setModal] = useState(false);
   const searchedAndSortedPosts = usePosts(posts, filter.sort, filter.query);
 
 
-  const fetchPosts = async () => {
+  useEffect(() => {
+    fetchPosts();
+  }, [])
+
+  async function fetchPosts() {
     const response = await axios.get('https://jsonplaceholder.typicode.com/posts');
     setPosts(response.data);
   }
@@ -44,8 +44,6 @@ function App() {
       >
         Создать пост
       </AppButton>
-
-      <AppButton onClick={() => fetchPosts()}>Получить посты</AppButton>
 
       <AppModal visible={modal} setVisible={setModal}>
         <PostForm create={createPost}/>
