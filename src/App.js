@@ -2,8 +2,7 @@ import React, {useMemo, useState} from 'react';
 import "./styles/App.css"
 import PostForm from "./components/PostForm";
 import PostList from "./components/PostList";
-import AppSelect from "./components/UI/select/AppSelect";
-import AppInput from "./components/UI/input/AppInput";
+import PostFilter from "./components/PostFilter";
 
 function App() {
   const [posts, setPosts] = useState([
@@ -11,25 +10,24 @@ function App() {
     {id: 2, title: "тт", body: "аа"},
     {id: 3, title: "дд", body: "кк"}
   ]);
-  const  [searchQuery, setSearchQuery] = useState('')
-  const [selectedSort, setSelectedSort] = useState('')
+  const [filter, setFilter] = useState({sort: '', query: ''})
 
-  // Sorting
+    // Sorting
   const sortedPosts = useMemo(() => {
-    if(selectedSort) {
+    if(filter.sort) {
       return [...posts].sort(
-        (a, b) => a[selectedSort].localeCompare(b[selectedSort])
+        (a, b) => a[filter.sort].localeCompare(b[filter.sort])
       );
     }
     return posts;
-  }, [selectedSort, posts]);
+  }, [filter.sort, posts]);
 
   // Searching
   const searchedAndSortedPosts = useMemo(() => {
     return sortedPosts.filter(
-      post => post.title.toLowerCase().includes(searchQuery.toLowerCase())
+      post => post.title.toLowerCase().includes(filter.query.toLowerCase())
     )
-  }, [sortedPosts, searchQuery])
+  }, [sortedPosts, filter.query])
 
   const createPost = (newPost) => {
     setPosts([...posts, newPost]);
@@ -39,29 +37,13 @@ function App() {
     setPosts(posts.filter(item => item.id !== post.id));
   }
 
-  const sortPosts = (sortOption) => {
-    setSelectedSort(sortOption);
-  }
 
   return (
     <div className="App">
       <PostForm create={createPost}/>
-
-      <AppInput
-        value={searchQuery}
-        onChange={event => setSearchQuery(event.target.value)}
-        placeholder='Поиск ...'
-      />
-
-      <hr style={{margin: '15px 0'}}/>
-      <AppSelect
-        value={selectedSort}
-        onChange={option => sortPosts(option)}
-        defaultOption="Сортировка по"
-        options={[
-          {value: 'title', name: 'По заголовку'},
-          {value: 'body', name: 'По описанию'},
-        ]}
+      <PostFilter
+        filter={filter}
+        setFilter={setFilter}
       />
 
       { searchedAndSortedPosts.length === 0
