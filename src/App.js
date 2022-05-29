@@ -1,10 +1,11 @@
-import React, {useMemo, useState} from 'react';
+import React, { useState} from 'react';
 import "./styles/App.css"
 import PostForm from "./components/PostForm";
 import PostList from "./components/PostList";
 import PostFilter from "./components/PostFilter";
 import AppModal from "./components/UI/modal/AppModal";
 import AppButton from "./components/UI/button/AppButton";
+import {usePosts} from "./hooks/usePosts";
 
 function App() {
   const [posts, setPosts] = useState([
@@ -14,23 +15,8 @@ function App() {
   ]);
   const [filter, setFilter] = useState({sort: '', query: ''})
   const [modal, setModal] = useState(false);
+  const searchedAndSortedPosts = usePosts(posts, filter.sort, filter.query);
 
-    // Sorting
-  const sortedPosts = useMemo(() => {
-    if(filter.sort) {
-      return [...posts].sort(
-        (a, b) => a[filter.sort].localeCompare(b[filter.sort])
-      );
-    }
-    return posts;
-  }, [filter.sort, posts]);
-
-  // Searching
-  const searchedAndSortedPosts = useMemo(() => {
-    return sortedPosts.filter(
-      post => post.title.toLowerCase().includes(filter.query.toLowerCase())
-    )
-  }, [sortedPosts, filter.query])
 
   const createPost = (newPost) => {
     setPosts([...posts, newPost]);
