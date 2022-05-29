@@ -1,4 +1,5 @@
 import React, { useState} from 'react';
+import axios from "axios";
 import "./styles/App.css"
 import PostForm from "./components/PostForm";
 import PostList from "./components/PostList";
@@ -18,11 +19,17 @@ function App() {
   const searchedAndSortedPosts = usePosts(posts, filter.sort, filter.query);
 
 
+  const fetchPosts = async () => {
+    const response = await axios.get('https://jsonplaceholder.typicode.com/posts');
+    setPosts(response.data);
+  }
+
   const createPost = (newPost) => {
     setPosts([...posts, newPost]);
     setModal(false)
   }
 
+  // Getting post from child component
   const deletePost = (post) => {
     setPosts(posts.filter(item => item.id !== post.id));
   }
@@ -37,6 +44,8 @@ function App() {
       >
         Создать пост
       </AppButton>
+
+      <AppButton onClick={() => fetchPosts()}>Получить посты</AppButton>
 
       <AppModal visible={modal} setVisible={setModal}>
         <PostForm create={createPost}/>
