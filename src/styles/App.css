@@ -48,3 +48,15 @@
     transform: translateX(100%);
     transition: all 700ms ease-in;
 }
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    padding: 30px;
+}
+
+.pagination__page {}
+
+.pagination__page.pagination__page--current {
+    border: 3px solid hotpink;
+}

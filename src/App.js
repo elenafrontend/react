@@ -19,11 +19,11 @@ function App() {
   const searchedAndSortedPosts = usePosts(posts, filter.sort, filter.query);
   const [totalPages, setTotalPages] = useState(0);
   const [limit, setLimit] = useState(10);
-  const [page, setPage] = useState(1);
-  const [pagesArray] = usePagination(totalPages);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pagesArray = usePagination(totalPages);
 
   const [fetchPosts, isPostsLoading, postError] = useFetching(async () => {
-    const response = await PostService.getAll(limit, page);
+    const response = await PostService.getAll(limit, currentPage);
     setPosts(response.data);
     const totalCount = response.headers['x-total-count'];
     setTotalPages(getPagesCount(totalCount, limit));
@@ -32,7 +32,7 @@ function App() {
 
   useEffect(() => {
     fetchPosts();
-  }, [])
+  }, [currentPage])
 
   const createPost = (newPost) => {
     setPosts([...posts, newPost]);
@@ -74,7 +74,23 @@ function App() {
       {
         isPostsLoading
           ? <div className="wrapper"><AppLoader /></div>
-          : <PostList remove={deletePost} posts={searchedAndSortedPosts} title={'Посты про JS'}/>
+          :
+          <div>
+            <PostList remove={deletePost} posts={searchedAndSortedPosts} title={'Посты про JS'}/>
+            <div className='pagination'>
+              { pagesArray.map(page =>
+                <AppButton
+                  key={page}
+                  onClick={() => setCurrentPage(page)}
+                  className={page === currentPage
+                    ? 'pagination__page pagination__page--current'
+                    : 'pagination__page'}
+                >
+                  { page }
+                </AppButton>
+              )}
+            </div>
+          </div>
       }
     </div>
   );
