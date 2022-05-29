@@ -7,6 +7,7 @@ import AppModal from "./components/UI/modal/AppModal";
 import AppButton from "./components/UI/button/AppButton";
 import {usePosts} from "./hooks/usePosts";
 import {PostService} from "./api/PostService";
+import AppLoader from "./components/UI/loader/AppLoader";
 
 function App() {
   const [posts, setPosts] = useState([]);
@@ -62,7 +63,7 @@ function App() {
 
       {
         isPostsLoading
-          ? <h2>Идет загрузка ...</h2>
+          ? <div className="wrapper"><AppLoader /></div>
           : <PostList remove={deletePost} posts={searchedAndSortedPosts} title={'Посты про JS'}/>
       }
     </div>
